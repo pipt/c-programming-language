@@ -1,5 +1,5 @@
 #include <stdio.h>
-#define MAXLINE 1000
+#define MAXLINE 32
 
 int getLine(char line[], int maxline);
 void copy(char to[], char from[]);
@@ -16,21 +16,37 @@ int main() {
       max = len;
       copy(longest, line);
     }
-  if (max > 0)
-    printf("%s", longest);
+  if (max > 0) {
+    printf("Longest line length: %d\n", max);
+    if (max > MAXLINE)
+      printf("Longest line, truncated to %d characters:\n", MAXLINE);
+    else
+      printf("Longest line:\n");
+    printf("%s\n", longest);
+  }
   return 0;
 }
 
 int getLine(char s[], int lim) {
   int c, i;
+  i = 0;
 
-  for (i = 0; i < lim - 1 && (c = getchar()) != EOF && c != '\n'; ++i)
-    s[i] = c;
-  if (c == '\n') {
-    s[i] = c;
+  while ((c = getchar()) != EOF && c != '\n') {
+    if (i < lim - 1)
+      s[i] = c;
     ++i;
   }
-  s[i] = '\0';
+
+  if (c == '\n') {
+    if (i < lim - 1) {
+      s[i++] = c;
+      s[i] = '\0';
+    } else {
+      s[lim - 1] = '\0';
+      ++i;
+    }
+  }
+
   return i;
 }
 
