@@ -20,9 +20,9 @@ int main() {
 
 int getLine(char s[], int lim) {
   int c, i;
-  i = 0;              
+  i = 0;
 
-  while ((c = getchar()) != EOF && c != '\n') {         
+  while ((c = getchar()) != EOF && c != '\n') {
     if (i < lim - 1)
       s[i] = c;
     ++i;
