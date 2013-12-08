@@ -1,11 +1,22 @@
+require "tmpdir"
+
 module CompileAndRun
   def compile(directory, name)
-    source = File.expand_path("../../../#{directory}/#{name}.c", __FILE__)
-    `cc -o #{name} #{source}`
+    Dir.mktmpdir do |dir|
+      current_dir = Dir.pwd
+      Dir.chdir(dir)
+      source = File.expand_path("../../../#{directory}/#{name}.c", __FILE__)
+      `cc -o #{name} #{source}`
+      yield
+      Dir.chdir(current_dir)
+    end
   end
 
   def compile_and_run(directory, name, input)
-    compile(directory, name)
-    `echo "#{input}" | ./#{name}`
+    output = nil
+    compile(directory, name) do
+      output = `echo "#{input}" | ./#{name}`
+    end
+    output
   end
 end
