@@ -1,11 +1,8 @@
-describe "detab" do
-  before :all do
-    source = File.expand_path("../../detab.c", __FILE__)
-    `cc -o detab #{source}`
-  end
+require_relative "spec_helper"
 
+describe "detab" do
   def run(input)
-    `echo "#{input}" | ./detab`
+    compile_and_run("chapter-1", "detab", input)
   end
 
   it "does nothing if there are no tabs" do
