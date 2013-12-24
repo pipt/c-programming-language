@@ -19,4 +19,12 @@ module CompileAndRun
     end
     output
   end
+
+  def compile_and_run_with_args(directory, name, *args)
+    output = nil
+    compile(directory, name) do
+      output = `./#{name} #{args.join(" ")}`
+    end
+    output
+  end
 end
