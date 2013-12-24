@@ -27,4 +27,12 @@ module CompileAndRun
     end
     output
   end
+
+  def compile_and_run_with_stdin_and_args(directory, name, stdin, *args)
+    output = nil
+    compile(directory, name) do
+      output = `echo "#{stdin}" | ./#{name} #{args.join(" ")}`
+    end
+    output
+  end
 end
