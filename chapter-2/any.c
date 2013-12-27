@@ -6,7 +6,7 @@ int charpos(char *input, char search);
 
 int main(int argc, char **argv) {
   char *input = argv[1];
-  char *search= argv[2];
+  char *search = argv[2];
 
   int position = any(input, search);
   printf("%d\n", position);
