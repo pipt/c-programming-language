@@ -2,7 +2,7 @@ require_relative "spec_helper"
 
 describe "expand" do
   def run(input)
-    compile_and_run_with_args("chapter-2", "expand", input).strip
+    compile_and_run_with_args("chapter-3", "expand", input).strip
   end
 
   it "handles a leading -" do

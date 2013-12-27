@@ -2,7 +2,7 @@ require_relative "spec_helper"
 
 describe "escape" do
   def run(stdin)
-    compile_and_run("chapter-2", "escape", stdin).strip
+    compile_and_run("chapter-3", "escape", stdin).strip
   end
 
   it 'converts tabs to \t' do

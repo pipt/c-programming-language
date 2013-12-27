@@ -3,7 +3,7 @@ require_relative "spec_helper"
 describe "binsearch" do
   def run(search, array)
     compile_and_run_with_stdin_and_args(
-      "chapter-2", "binsearch", array.join("\n"), search, array.length
+      "chapter-3", "binsearch", array.join("\n"), search, array.length
     ).strip
   end
 
