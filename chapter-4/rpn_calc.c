@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 #define MAXOP 100
 #define NUMBER '0'
@@ -69,6 +70,17 @@ void handle_long_command(char command[]) {
     push(op2);
   } else if (strcmp(command, "clear") == 0) {
     clear();
+  } else if (strcmp(command, "sin") == 0) {
+    push(sin(pop()));
+  } else if (strcmp(command, "cos") == 0) {
+    push(cos(pop()));
+  } else if (strcmp(command, "tan") == 0) {
+    push(tan(pop()));
+  } else if (strcmp(command, "exp") == 0) {
+    push(exp(pop()));
+  } else if (strcmp(command, "pow") == 0) {
+    double op2 = pop();
+    push(pow(pop(), op2));
   } else {
     printf("error: unknown long command %s\n", command);
   }
