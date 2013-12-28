@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define MAXOP 100
 #define NUMBER '0'
@@ -34,6 +35,10 @@ int main() {
           push(pop() / op2);
         else
           printf("error: zero divisor\n");
+        break;
+      case '%':
+        op2 = pop();
+        push((int) pop() % (int) op2);
         break;
       case '\n':
         printf("\t%.8g\n", pop());
@@ -74,23 +79,23 @@ void ungetch(int);
 
 int getop(char s[]) {
   int i, c;
+  i = 0;
 
   while ((s[0] = c = getch()) == ' ' || c == '\t')
     ;
-  s[1] = '\0';
-  if (!isdigit(c) && c != '.')
+  if (c == '\n')
     return c;
-  i = 0;
-  if (isdigit(c))
-    while (isdigit(s[++i] = c = getch()))
-      ;
-  if (c == '.')
-    while (isdigit(s[++i] = c = getch()))
-      ;
-  s[i] = '\0';
+  while ((c = getch()) && c != ' ' && c != '\n' && c != EOF)
+    s[++i] = c;
   if (c != EOF)
     ungetch(c);
-  return NUMBER;
+  s[i + 1] = '\0';
+
+  if (strlen(s) > 1 || isdigit(s[0])) {
+    return NUMBER;
+  } else {
+    return s[0];
+  }
 }
 
 #define BUFSIZE 100
