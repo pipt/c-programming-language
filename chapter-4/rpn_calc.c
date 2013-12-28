@@ -13,6 +13,10 @@ double pop(void);
 double peek(void);
 void clear(void);
 void handle_long_command(char command[]);
+void var_set(char var_name, double value);
+double var_get(char var_name);
+
+double last_printed = 0.0;
 
 int main() {
   int type;
@@ -49,6 +53,10 @@ int main() {
         push((int) pop() % (int) op2);
         break;
       case '\n':
+        last_printed = pop();
+        printf("\t%.8g\n", last_printed);
+        break;
+      case '?':
         printf("\t%.8g\n", peek());
         break;
       default:
@@ -60,7 +68,13 @@ int main() {
 }
 
 void handle_long_command(char command[]) {
-  if (strcmp(command, "duplicate") == 0) {
+  if (strncmp(command, "set", 3) == 0) {
+    var_set(command[3], pop());
+  } else if (strncmp(command, "get", 3) == 0) {
+    push(var_get(command[3]));
+  } else if (strcmp(command, "last") == 0) {
+    push(last_printed);
+  } else if (strcmp(command, "duplicate") == 0) {
     push(peek());
   } else if (strcmp(command, "swap") == 0) {
     double op1, op2;
@@ -118,6 +132,16 @@ double peek(void) {
 
 void clear(void) {
   sp = 0;
+}
+
+double variables[256];
+
+void var_set(char var_name, double value) {
+  variables[var_name] = value;
+}
+
+double var_get(char var_name) {
+  return variables[var_name];
 }
 
 #include <ctype.h>
