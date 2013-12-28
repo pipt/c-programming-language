@@ -4,10 +4,14 @@
 
 #define MAXOP 100
 #define NUMBER '0'
+#define LONG_COMMAND '~'
 
 int getop(char []);
 void push(double);
 double pop(void);
+double peek(void);
+void clear(void);
+void handle_long_command(char command[]);
 
 int main() {
   int type;
@@ -18,6 +22,9 @@ int main() {
     switch (type) {
       case NUMBER:
         push(atof(s));
+        break;
+      case LONG_COMMAND:
+        handle_long_command(s);
         break;
       case '+':
         push(pop() + pop());
@@ -41,7 +48,7 @@ int main() {
         push((int) pop() % (int) op2);
         break;
       case '\n':
-        printf("\t%.8g\n", pop());
+        printf("\t%.8g\n", peek());
         break;
       default:
         printf("error: unknown command %s\n", s);
@@ -49,6 +56,22 @@ int main() {
     }
   }
   return 0;
+}
+
+void handle_long_command(char command[]) {
+  if (strcmp(command, "duplicate") == 0) {
+    push(peek());
+  } else if (strcmp(command, "swap") == 0) {
+    double op1, op2;
+    op1 = pop();
+    op2 = pop();
+    push(op1);
+    push(op2);
+  } else if (strcmp(command, "clear") == 0) {
+    clear();
+  } else {
+    printf("error: unknown long command %s\n", command);
+  }
 }
 
 #define MAXVAL 100
@@ -72,6 +95,19 @@ double pop(void) {
   }
 }
 
+double peek(void) {
+  if (sp > 0)
+    return val[sp - 1];
+  else {
+    printf("error: stack empty\n");
+    return 0.0;
+  }
+}
+
+void clear(void) {
+  sp = 0;
+}
+
 #include <ctype.h>
 
 int getch(void);
@@ -91,8 +127,10 @@ int getop(char s[]) {
     ungetch(c);
   s[i + 1] = '\0';
 
-  if (strlen(s) > 1 || isdigit(s[0])) {
+  if ((strlen(s) > 1 && isdigit(s[1])) || isdigit(s[0])) {
     return NUMBER;
+  } else if (strlen(s) > 1) {
+    return LONG_COMMAND;
   } else {
     return s[0];
   }
