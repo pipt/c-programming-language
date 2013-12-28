@@ -148,6 +148,7 @@ double var_get(char var_name) {
 
 int getch(void);
 void ungetch(int);
+void ungets(char s[]);
 
 int getop(char s[]) {
   int i, c;
@@ -186,4 +187,10 @@ void ungetch(int c) {
     printf("ungetch: too many characters\n");
   else
     buf[bufp++] = c;
+}
+
+void ungets(char s[]) {
+  int i = 0;
+  while (s[i] != '\0')
+    ungetch(s[i++]);
 }
