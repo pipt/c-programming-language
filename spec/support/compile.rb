@@ -1,37 +1,43 @@
 require "tmpdir"
 
 module CompileAndRun
-  def compile(directory, name)
+  def compile(directory, names)
     Dir.mktmpdir do |dir|
       current_dir = Dir.pwd
       Dir.chdir(dir)
-      source = File.expand_path("../../../#{directory}/#{name}.c", __FILE__)
-      `cc -o #{name} #{source}`
+      sources = Array(names).map { |name|
+        File.expand_path("../../../#{directory}/#{name}.c", __FILE__)
+      }
+      `cc -o #{program_name(names)} #{sources.join(" ")}`
       yield
       Dir.chdir(current_dir)
     end
   end
 
-  def compile_and_run(directory, name, input)
+  def program_name(names)
+    Array(names).first
+  end
+
+  def compile_and_run(directory, names, input)
     output = nil
-    compile(directory, name) do
-      output = `echo "#{input}" | ./#{name}`
+    compile(directory, names) do
+      output = `echo "#{input}" | ./#{program_name(names)}`
     end
     output
   end
 
-  def compile_and_run_with_args(directory, name, *args)
+  def compile_and_run_with_args(directory, names, *args)
     output = nil
-    compile(directory, name) do
-      output = `./#{name} #{args.join(" ")}`
+    compile(directory, names) do
+      output = `./#{program_name(names)} #{args.join(" ")}`
     end
     output
   end
 
-  def compile_and_run_with_stdin_and_args(directory, name, stdin, *args)
+  def compile_and_run_with_stdin_and_args(directory, names, stdin, *args)
     output = nil
-    compile(directory, name) do
-      output = `echo "#{stdin}" | ./#{name} #{args.join(" ")}`
+    compile(directory, names) do
+      output = `echo "#{stdin}" | ./#{program_name(names)} #{args.join(" ")}`
     end
     output
   end
