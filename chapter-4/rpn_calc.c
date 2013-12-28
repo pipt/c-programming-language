@@ -187,7 +187,9 @@ int getch(void) {
 }
 
 void ungetch(int c) {
-  if (buf != -1)
+  if (c == EOF)
+    printf("ungetch: can't push back EOF\n");
+  else if (buf != -1)
     printf("ungetch: already storing a character\n");
   else
     buf = c;
