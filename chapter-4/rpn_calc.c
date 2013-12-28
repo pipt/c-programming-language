@@ -148,7 +148,6 @@ double var_get(char var_name) {
 
 int getch(void);
 void ungetch(int);
-void ungets(char s[]);
 
 int getop(char s[]) {
   int i, c;
@@ -175,22 +174,21 @@ int getop(char s[]) {
 
 #define BUFSIZE 100
 
-char buf[BUFSIZE];
-int bufp = 0;
+int buf = -1;
 
 int getch(void) {
-  return (bufp > 0) ? buf[--bufp] : getchar();
+  if (buf == -1) {
+    return getchar();
+  } else {
+    int tmp = buf;
+    buf = -1;
+    return tmp;
+  }
 }
 
 void ungetch(int c) {
-  if (bufp >= BUFSIZE)
-    printf("ungetch: too many characters\n");
+  if (buf != -1)
+    printf("ungetch: already storing a character\n");
   else
-    buf[bufp++] = c;
-}
-
-void ungets(char s[]) {
-  int i = 0;
-  while (s[i] != '\0')
-    ungetch(s[i++]);
+    buf = c;
 }
