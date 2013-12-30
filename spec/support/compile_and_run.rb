@@ -18,7 +18,7 @@ module CompileAndRun
     Array(names).first
   end
 
-  def compile_and_run(directory, names, input)
+  def compile_and_run(directory, names, input = nil)
     output = nil
     compile(directory, names) do
       output = `echo "#{input}" | ./#{program_name(names)}`
