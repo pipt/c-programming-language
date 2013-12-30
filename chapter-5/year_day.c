@@ -63,13 +63,13 @@ int day_of_year(int year, int month, int day, int *err_code, char **err_str) {
 
   leap = (year%4 == 0 && year%100 != 0) || year%400 == 0;
 
-  if (day > daytab[leap][month]) {
+  if (day > *(*(daytab + leap) + month)) {
     *err_code = -1;
     *err_str = "error: day of month too big";
     return -1;
   }
   for (i = 1; i < month; i++)
-    day += daytab[leap][i];
+    day += *(*(daytab + leap) + i);
   return day;
 }
 
@@ -98,8 +98,8 @@ void month_day(
     return;
   }
 
-  for (i = 1; yearday > daytab[leap][i]; i++)
-    yearday -= daytab[leap][i];
+  for (i = 1; yearday > *(*(daytab + leap) + i); i++)
+    yearday -= *(*(daytab + leap) + i);
   *pmonth = i;
   *pday = yearday;
 }
