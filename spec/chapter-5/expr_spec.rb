@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe "basic functionality" do
+describe "expr" do
   def run(commands)
     modified_commands = commands.split(" ").map{|x| %Q{"#{x}"} }
     compile_and_run_with_args("chapter-5", "expr", modified_commands).strip.to_f
