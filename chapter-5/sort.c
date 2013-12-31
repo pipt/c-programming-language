@@ -9,12 +9,19 @@ char *lineptr[MAXLINES];
 int readlines(char *lineptr[], int nlines);
 void writelines(char *lineptr[], int nlines);
 
-void my_qsort(void *lineptr[], int left, int right, int (*comp)(void *, void *));
+void my_qsort(
+    void *lineptr[],
+    int left,
+    int right,
+    int (*comp)(void *, void *),
+    int reverse
+    );
 int numcmp(const char *, const char *);
 
 int main(int argc, char **argv) {
   int c, nlines;
   int numeric = 0;
+  int reverse = 0;
 
   if (argc > 1 && strcmp(argv[1], "-n") == 0)
     numeric = 1;
@@ -24,6 +31,9 @@ int main(int argc, char **argv) {
         case 'n':
           numeric = 1;
           break;
+        case 'r':
+          reverse = 1;
+          break;
         default:
           printf("sort: unknown option %c\n", c);
           return -1;
@@ -31,7 +41,8 @@ int main(int argc, char **argv) {
 
   if ((nlines = readlines(lineptr, MAXLINES)) >= 0) {
     my_qsort((void **) lineptr, 0, nlines - 1,
-        (int (*)(void*, void*))(numeric ? numcmp : strcmp));
+        (int (*)(void*, void*))(numeric ? numcmp : strcmp),
+        reverse);
     writelines(lineptr, nlines);
     return 0;
   } else {
@@ -87,7 +98,13 @@ void swap(void *v[], int i, int j) {
   v[j] = temp;
 }
 
-void my_qsort(void *v[], int left, int right, int (*comp)(void *, void *)) {
+void my_qsort(
+    void *v[],
+    int left,
+    int right,
+    int (*comp)(void *, void *),
+    int reverse
+    ) {
   int i, last;
 
   if (left >= right)
@@ -95,11 +112,11 @@ void my_qsort(void *v[], int left, int right, int (*comp)(void *, void *)) {
   swap(v, left, (left + right) / 2);
   last = left;
   for (i = left + 1; i <= right; i++)
-    if ((*comp)(v[i], v[left]) < 0)
+    if ((*comp)(v[i], v[left]) * (reverse ? -1 : 1) < 0)
       swap(v, ++last, i);
   swap(v, left, last);
-  my_qsort(v, left, last - 1, comp);
-  my_qsort(v, last + 1, right, comp);
+  my_qsort(v, left, last - 1, comp, reverse);
+  my_qsort(v, last + 1, right, comp, reverse);
 }
 
 #define ALLOCSIZE 10000

@@ -31,4 +31,20 @@ describe "strncmp" do
       expect(run("1\n-3\n-1")).to eq("-3\n-1\n1")
     end
   end
+
+  context "sorting in reverse" do
+    let(:args) { "-r" }
+
+    it "sorts the input" do
+      expect(run(lines.join("\n"))).to eq(lines.sort.reverse.join("\n"))
+    end
+
+    context "sorting numerically" do
+      let(:args) { "-rn" }
+
+      it "sorts numbers" do
+        expect(run("1\n-3\n-1")).to eq("1\n-1\n-3")
+      end
+    end
+  end
 end
