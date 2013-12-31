@@ -22,6 +22,8 @@ int main(int argc, char **argv) {
   int c, nlines;
   int numeric = 0;
   int reverse = 0;
+  int case_insensitive = 0;
+  int (*comp)(const char*, const char*);
 
   if (argc > 1 && strcmp(argv[1], "-n") == 0)
     numeric = 1;
@@ -34,14 +36,24 @@ int main(int argc, char **argv) {
         case 'r':
           reverse = 1;
           break;
+        case 'f':
+          case_insensitive = 1;
+          break;
         default:
           printf("sort: unknown option %c\n", c);
           return -1;
       }
 
+  if (numeric)
+    comp = numcmp;
+  else if(case_insensitive)
+    comp = strcasecmp;
+  else
+    comp = strcmp;
+
   if ((nlines = readlines(lineptr, MAXLINES)) >= 0) {
     my_qsort((void **) lineptr, 0, nlines - 1,
-        (int (*)(void*, void*))(numeric ? numcmp : strcmp),
+        (int (*)(void*, void*)) comp,
         reverse);
     writelines(lineptr, nlines);
     return 0;

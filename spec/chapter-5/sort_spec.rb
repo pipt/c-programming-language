@@ -22,6 +22,10 @@ describe "strncmp" do
     it "sorts numbers" do
       expect(run("1\n-3\n-1")).to eq("-1\n-3\n1")
     end
+
+    it "sorts case-sensitively" do
+      expect(run("a\nb\nA\nB")).to eq("A\nB\na\nb")
+    end
   end
 
   context "sorting numerically" do
@@ -29,6 +33,14 @@ describe "strncmp" do
 
     it "sorts numbers" do
       expect(run("1\n-3\n-1")).to eq("-3\n-1\n1")
+    end
+  end
+
+  context "case-insensitive sort" do
+    let(:args) { "-f" }
+
+    it "sorts the input" do
+      expect(run("a\nb\nA\nB")).to eq("A\na\nb\nB")
     end
   end
 
@@ -44,6 +56,14 @@ describe "strncmp" do
 
       it "sorts numbers" do
         expect(run("1\n-3\n-1")).to eq("1\n-1\n-3")
+      end
+    end
+
+    context "case-insensitive sort" do
+      let(:args) { "-rf" }
+
+      it "sorts the input" do
+        expect(run("a\nB\nb\nA")).to eq("B\nb\na\nA")
       end
     end
   end
