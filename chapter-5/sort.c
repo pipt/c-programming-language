@@ -13,11 +13,21 @@ void my_qsort(void *lineptr[], int left, int right, int (*comp)(void *, void *))
 int numcmp(const char *, const char *);
 
 int main(int argc, char **argv) {
-  int nlines;
+  int c, nlines;
   int numeric = 0;
 
   if (argc > 1 && strcmp(argv[1], "-n") == 0)
     numeric = 1;
+  while (--argc > 0 && (*++argv)[0] == '-')
+    while ((c = *++argv[0]))
+      switch (c) {
+        case 'n':
+          numeric = 1;
+          break;
+        default:
+          printf("sort: unknown option %c\n", c);
+          return -1;
+      }
 
   if ((nlines = readlines(lineptr, MAXLINES)) >= 0) {
     my_qsort((void **) lineptr, 0, nlines - 1,
