@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe "strncmp" do
+describe "sort" do
   def run(input)
     compile_and_run_with_stdin_and_args("chapter-5", "sort", input, args).strip
   end
