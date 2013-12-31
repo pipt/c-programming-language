@@ -105,17 +105,23 @@ int getword(char *word, int lim) {
 
   while (isspace(c = getch()))
     ;
-  if (c != EOF)
+  if (c != EOF) {
+    if (c == '"')
+      while ((c = getch()) != '"')
+        ;
     *w++ = c;
+  }
   if (!isalpha(c)) {
     *w = '\0';
     return c;
   }
-  for ( ; --lim > 0; w++)
-    if (!isalnum(*w = getch())) {
+  for ( ; --lim > 0; w++) {
+    *w = getch();
+    if (!(isalnum(*w) || *w == '_')) {
       ungetch(*w);
       break;
     }
+  }
   *w = '\0';
   return word[0];
 }
